@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GoodReads_NetWrapper.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GoodReads_NetWrapper
 {
@@ -41,6 +44,25 @@ namespace GoodReads_NetWrapper
             object result = APIWrapper.CallAPI(endpoint, "GET", DeveloperKey, param);
 
             return long.Parse(result.ToString());
+        }
+
+        /// <summary>
+        /// Get review statistics given a list of ISBNs.
+        /// </summary>
+        /// <param name="isbns">The isbns.</param>
+        /// <returns></returns>
+        public List<ReviewCount> GetBookReviewCounts(List<string> isbns)
+        {
+            List<ReviewCount> reviewCounts = new List<ReviewCount>();
+            string endpoint = "book/review_counts.json";
+
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("isbns", string.Join(",", isbns));
+
+            object result = APIWrapper.CallAPI(endpoint, "GET", DeveloperKey, param);
+            ReviewCounts counts = JsonConvert.DeserializeObject<ReviewCounts>(result.ToString());
+
+            return counts.values;
         }
     }
 }

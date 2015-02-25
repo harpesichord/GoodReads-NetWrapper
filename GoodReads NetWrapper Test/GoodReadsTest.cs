@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using GoodReads_NetWrapper;
+using GoodReads_NetWrapper.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GoodReads_NetWrapper_Test
@@ -65,7 +67,7 @@ namespace GoodReads_NetWrapper_Test
         ///A test for GetBookID
         ///</summary>
         [TestMethod()]
-        public void GetBookIDTest()
+        public void GetBookIDTestMatch()
         {
             string DeveloperKey = DevelopersKey.Key;
             GoodReads target = new GoodReads(DeveloperKey);
@@ -74,7 +76,21 @@ namespace GoodReads_NetWrapper_Test
             long actual;
             actual = target.GetBookID(isbn);
             Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
+        }
+
+        /// <summary>
+        ///A test for GetBookReveiwCounts
+        ///</summary>
+        [TestMethod()]
+        public void GetBookReveiwCountsTest()
+        {
+            string DeveloperKey = DevelopersKey.Key;
+            GoodReads target = new GoodReads(DeveloperKey);
+            List<string> isbns = new List<string>(new string[] { "0345451325" });
+            int expected = 60229;
+            List<ReviewCount> actual;
+            actual = target.GetBookReviewCounts(isbns);
+            Assert.AreEqual(expected, actual[0].id);
         }
     }
 }
