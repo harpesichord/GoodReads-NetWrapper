@@ -72,8 +72,8 @@ namespace GoodReads_NetWrapper_Test
             string DeveloperKey = DevelopersKey.Key;
             GoodReads target = new GoodReads(DeveloperKey);
             string isbn = "0345451325";
-            long expected = 60229;
-            long actual;
+            int expected = 60229;
+            int actual;
             actual = target.GetBookID(isbn);
             Assert.AreEqual(expected, actual);
         }

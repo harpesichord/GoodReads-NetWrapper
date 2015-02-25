@@ -35,7 +35,7 @@ namespace GoodReads_NetWrapper
         /// </summary>
         /// <param name="isbn">The isbn.</param>
         /// <returns></returns>
-        public long GetBookID(string isbn)
+        public int GetBookID(string isbn)
         {
             string endpoint = "book/isbn_to_id";
             Dictionary<string, object> param = new Dictionary<string, object>();
@@ -43,7 +43,7 @@ namespace GoodReads_NetWrapper
 
             object result = APIWrapper.CallAPI(endpoint, "GET", DeveloperKey, param);
 
-            return long.Parse(result.ToString());
+            return int.Parse(result.ToString());
         }
 
         /// <summary>
@@ -63,6 +63,62 @@ namespace GoodReads_NetWrapper
             ReviewCounts counts = JsonConvert.DeserializeObject<ReviewCounts>(result.ToString());
 
             return counts.values;
+        }
+
+        /// <summary>
+        /// Gets the book review widget given the GoodReads book id.
+        /// </summary>
+        /// <param name="id">The GoodReads book id.</param>
+        /// <returns></returns>
+        public string GetBookReviewWidget(int id)
+        {
+            string endpoint = "book/show.json";
+
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("id", id);
+
+            object result = APIWrapper.CallAPI(endpoint, "GET", DeveloperKey, param);
+            dynamic widget = JsonConvert.DeserializeObject(result.ToString());
+
+            return widget.reviews_widget;
+        }
+
+        /// <summary>
+        /// Gets the book review widget given the GoodReads book title and author.
+        /// </summary>
+        /// <param name="title">The title.</param>
+        /// <param name="author">The author, specify for more accurate results.</param>
+        /// <returns></returns>
+        public string GetBookReviewWidget(string title, string author = null)
+        {
+            string endpoint = "book/title.json";
+
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("title", title);
+            if (author != null) param.Add("author", author);
+
+            object result = APIWrapper.CallAPI(endpoint, "GET", DeveloperKey, param);
+            dynamic widget = JsonConvert.DeserializeObject(result.ToString());
+
+            return widget.reviews_widget;
+        }
+
+        /// <summary>
+        /// Gets the book review widget given the GoodReads book isbn.
+        /// </summary>
+        /// <param name="isbn">The isbn.</param>
+        /// <returns></returns>
+        public string GetBookReviewWidget(string isbn)
+        {
+            string endpoint = "book/isbn.json";
+
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param.Add("isbn", isbn);
+
+            object result = APIWrapper.CallAPI(endpoint, "GET", DeveloperKey, param);
+            dynamic widget = JsonConvert.DeserializeObject(result.ToString());
+
+            return widget.reviews_widget;
         }
     }
 }
